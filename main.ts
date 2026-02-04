@@ -7,6 +7,9 @@ export const testFizzBuzz = (nums: number[]): string => {
   return nums.map((n) => fizzBuzzer(n, fizzBuzzMap)).join(".\n");
 };
 
+export const genericErrorMessage =
+  "Da ist was schiefgelaufen: (Womp Womp ;() )";
+
 async function writeToTestFile(path: string, text: string) {
   try {
     const dir = dirname(path);
@@ -15,11 +18,14 @@ async function writeToTestFile(path: string, text: string) {
     await writeFile(path, text);
     console.log(`Datei wurde erfolgreich in ${path} gespeichert!`);
   } catch (error) {
-    console.error("Da ist was schiefgelaufen: (Womp Womp ;() )", error);
+    console.error(genericErrorMessage, error);
   }
 }
 
 export const createRange = (start: number, end: number) => {
+  if (start >= end) {
+    throw new Error("Fehler: Start- und Endwerte müssen gültige Zahlen sein.");
+  }
   return Array.from({ length: end - start + 1 }, (_, i) => i + start);
 };
 
