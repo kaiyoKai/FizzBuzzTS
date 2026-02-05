@@ -1,11 +1,8 @@
-import { fizzBuzzer, fizzBuzzMap } from "./fizzBuzz.js";
+import { testFizzBuzz, createRange } from "./fizzBuzz.js";
 import { mkdir } from "node:fs/promises";
 import { writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { parseArgs } from "node:util";
-export const testFizzBuzz = (nums: number[]): string => {
-  return nums.map((n) => fizzBuzzer(n, fizzBuzzMap)).join(".\n");
-};
 
 export const genericErrorMessage =
   "Da ist was schiefgelaufen: (Womp Womp ;() )";
@@ -21,14 +18,6 @@ async function writeToTestFile(path: string, text: string) {
     console.error(genericErrorMessage, error);
   }
 }
-
-export const createRange = (start: number, end: number) => {
-  if (start >= end) {
-    throw new Error("Fehler: Start- und Endwerte müssen gültige Zahlen sein.");
-  }
-  return Array.from({ length: end - start + 1 }, (_, i) => i + start);
-};
-
 const options = {
   start: { type: "string", short: "s" },
   end: { type: "string", short: "e" },
@@ -42,7 +31,9 @@ async function main() {
   const end = parseInt(values.end || "100");
 
   const range = createRange(start, end);
-  const dir = "./TestResults/fizzBuzzTest.txt";
+  const date = new Date().toLocaleDateString();
+  const dir = `./TestResults/fizzBuzzTest${date}.txt`;
+
   const resultText = testFizzBuzz(range);
   await writeToTestFile(dir, resultText);
 
